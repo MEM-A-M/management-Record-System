@@ -1,0 +1,381 @@
+#include <stdio.h>
+#include <iostream>
+using namespace std;
+
+//Define a list
+struct Node
+{
+  string Name;
+  int ID;
+  string day_of_Work;
+  long int Phone_Number;
+  string Address;
+  int Work_hours;
+  float Salary;
+  Node *Next;
+};
+
+//_______________________________________________//
+
+//Define a function Insert employee
+void insertion (Node** head)
+{
+  Node *new_Node = new Node ();
+  new_Node->Next = NULL;
+  new_Node->Work_hours = 32;
+  
+  cout << "_____________________________________________________________________"<<endl;
+  cout << "\nEnter the name of the employee: ";
+  cin >> new_Node->Name;
+  cout << "Enter the ID number of the employee: " ;
+  cin >> new_Node->ID;
+  
+  Node* helpPtr = *head;
+  // loop to make sure the ID number has not been registered before:
+  while (helpPtr != NULL)
+  {
+      if(new_Node->ID == helpPtr->ID)
+      {
+          cout << "\nthis ID number is already registered.";
+          return;
+      }
+      helpPtr = helpPtr->Next;
+  }
+  
+  cout << "Enter the first day of Work for the employee: ";
+  cin >> new_Node->day_of_Work;
+  cout << "Enter the Phone Number of the employee: ";
+  cin >> new_Node->Phone_Number;
+  cout << "Enter the Address of the employee: ";
+  cin >> new_Node->Address;
+  cout << "Enter the Salary of the employee: ";
+  cin >> new_Node->Salary;
+  cout << "_____________________________________________________________________"<<endl;
+  cout << "\nthe employee has been successfully registered.";
+
+  // add the node in the first:
+  if (*head == NULL || (*head)->ID >= new_Node->ID)
+    {
+      *head = new_Node;
+      return;
+    }
+
+  // add the node in the middle in sorted way:
+  Node *temp = *head;
+  while (temp->Next != NULL && temp->Next->ID < new_Node->ID)
+    {
+      temp = temp->Next;
+    }
+    new_Node->Next = temp->Next;
+    temp->Next = new_Node;
+}
+
+//_______________________________________________//
+
+//Define a function show employees
+void ShowEmployees(Node* head)
+{
+    Node* helpPtr1 = head;
+    
+    // if there is no employee:
+    if (helpPtr1 == NULL)
+    {
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nSorry! there is no employees in the system!";
+        return;
+    }
+
+    cout << "_____________________________________________________________________"<<endl;
+    cout << "\nThis is all employees data sorted by id number:\n";
+    
+    //loop to print all employees with thier data:
+    while (helpPtr1 != NULL) 
+    {
+        cout << "Name: " << helpPtr1->Name << " | " << "ID: " << helpPtr1->ID << " | " << "Address: " << helpPtr1->Address; 
+        cout << " | Phone number: " << helpPtr1->Phone_Number << " | " << "first day of Work: " << helpPtr1->day_of_Work;
+        cout << " | Work hours: " << helpPtr1->Work_hours << " | " << "Salary: " << helpPtr1-> Salary << "\n";
+        helpPtr1 = helpPtr1->Next;
+    }
+    
+}
+
+//_______________________________________________//
+
+//Define a function delete employee 
+int delEmployee(Node** head) 
+{
+    Node* helpPtr2 = *head;
+    Node* delNode;
+    
+     // if there is no employee:
+    if (helpPtr2 == NULL)
+    {
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nSorry there is no employees in the system!";
+        return -1 ;
+    }
+    
+    cout << "\nEnter the employee ID you want to delete: ";
+    int DeleteID;
+    cin >> DeleteID;
+    
+    // if there is one employee:
+    if ( helpPtr2->ID == DeleteID)
+    {
+        *head = helpPtr2->Next;
+        free(helpPtr2);
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nthe employee: " << helpPtr2->ID << " has been successfully deleted.";
+        return 0 ;
+    }
+    
+    // if there is more then one employee:
+    while(helpPtr2->Next != NULL)
+    {
+        if (helpPtr2->Next->ID == DeleteID)
+        {
+            delNode = helpPtr2->Next;
+            helpPtr2->Next = helpPtr2->Next->Next;
+            free(delNode);
+            cout << "_____________________________________________________________________"<<endl;
+            cout << "\nthe employee: " << helpPtr2->Next->Name <<"has been successfully deleted.";
+            return 0 ;
+        }
+        helpPtr2 = helpPtr2->Next;
+    }
+    
+    // if the entered ID is not found:
+    if(helpPtr2->Next->ID != DeleteID)
+    {
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nSorry! this id number is not found.";
+        return 0 ;
+    }
+    return 0;
+}
+
+//_______________________________________________//
+
+//Define a function search employee
+void SearchEmployee (Node* head)
+{
+    Node* helpPtr = head;
+    
+    // if there is no employee:
+    if (helpPtr == NULL)
+    {
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nSorry! there is no employees in the system!";
+        return;
+    }
+    
+    int option;
+    cout << "\nEnter the Id number of the employee you want to search for: ";
+    cin >> option;
+    
+    // loop to search for the target employee:
+    while( helpPtr != NULL )
+    {
+        if (helpPtr->ID == option)
+        {
+            cout << "_____________________________________________________________________"<<endl;
+            cout << "\nthis is all the data associated with the entered ID:\n";
+            cout << "Name: " << helpPtr->Name << " | " << "ID: " << helpPtr->ID << " | " << "Address: " << helpPtr->Address; 
+            cout << " | Phone number: " << helpPtr->Phone_Number << " | " << "first day of Work: " << helpPtr->day_of_Work;
+            cout << " | Work hours: " << helpPtr->Work_hours << " | " << "Salary: " << helpPtr-> Salary << "\n";
+            return;
+        }
+        helpPtr = helpPtr->Next;
+    }
+    cout << "_____________________________________________________________________"<<endl;
+    cout << "\nthis ID number is not found!";
+}
+
+//_______________________________________________//
+
+//Define a function Update employee
+void UpdateEmployee(Node** head)
+{
+    Node* helpPtr = *head;
+    
+    // if there is no employee:
+    if (helpPtr == NULL)
+    {
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nSorry! there is no employees in the system!";
+        return;
+    }
+    
+    cout << "\nEnter the Id number of the employee whose data you want to update: ";
+    int TheID;
+    cin >> TheID;
+    
+    // loop to search for the target employee:
+    while( helpPtr != NULL )
+    {
+        if (helpPtr->ID == TheID)
+        {
+            cout << "_____________________________________________________________________"<<endl;
+            cout << "\nthis is all the data associated with the entered ID:\n";
+            cout << "Name: " << helpPtr->Name << " | " << "Address: " << helpPtr->Address; 
+            cout << " | Phone number: " << helpPtr->Phone_Number << " | " << "first day of Work: ";
+            cout << helpPtr->day_of_Work << " | ""Work hours: "<< "\n";
+            cout << "\nWhat is the data you want to update? (Just enter a number)\n";
+            cout << "(1)Name\n(2)Address\n(3)Phone number\n(4)first day of Work" << endl;
+            int option;
+            cin >> option;
+            if (option == 1) //change the name
+            {
+                cout << "Enter the new name: ";
+                cin >> helpPtr->Name;
+                cout << "_____________________________________________________________________"<<endl;
+                cout << "\nThe name has been successfully updated.";
+                return;
+            }
+            else if (option == 2) // change the address
+            {
+                cout << "Enter the new address: ";
+                cin >> helpPtr->Address;
+                cout << "_____________________________________________________________________"<<endl;
+                cout << "\nThe address has been successfully updated.";
+                return;
+            }
+            else if (option == 3) // change the Phone Number
+            {
+                cout << "Enter the new phone Number: ";
+                cin >> helpPtr->Phone_Number;
+                cout << "_____________________________________________________________________"<<endl;
+                cout << "\nThe phone Number has been successfully updated.";
+                return;
+            }
+            else if (option == 4) // change the first day of Work
+            {
+                cout << "Enter the new first day of Work: ";
+                cin >> helpPtr->day_of_Work;
+                cout << "_____________________________________________________________________"<<endl;
+                cout << "\nThe day has been successfully updated.";
+                return;
+            }
+        }
+        helpPtr = helpPtr->Next;
+    }
+    cout << "_____________________________________________________________________"<<endl;
+    cout << "\nthis ID number is not found!";
+}
+
+//_______________________________________________//
+
+//Define a function Update salary
+void UpdateSalary(Node** head)
+{
+    Node* helpPtr = *head;
+    
+    // if there is no employee:
+    if (helpPtr == NULL)
+    {
+        cout << "_____________________________________________________________________"<<endl;
+        cout << "\nSorry! there is no employees in the system!";
+        return;
+    }
+    
+    cout << "\nEnter the Id number of the employee whose salary you want to update: ";
+    int TheID;
+    cin >> TheID;
+    
+    // loop to search for the target employee: 
+    while( helpPtr != NULL )
+    {
+        if (helpPtr->ID == TheID)
+        {
+            cout << "\nthe employee whose salary will be updated: \n";
+            cout << "Name: "<<helpPtr->Name<<" | "<<"Work hours: "<<helpPtr->Work_hours<<" | "<< "Salary: "<<helpPtr->Salary;
+            cout << "\nenter the number of extra hours: ";
+            int hours;
+            cin >> hours;
+            helpPtr->Salary = ( helpPtr->Salary * 0.02 * hours ) + helpPtr->Salary;
+            helpPtr->Work_hours = helpPtr->Work_hours + hours;
+            cout << "_____________________________________________________________________"<<endl;
+            cout << "\nThe Salary has been successfully updated.";
+            cout << "\nthe Salary after updated: " << helpPtr->Salary << " with " << helpPtr->Work_hours << " Work hours.";
+            return;
+        }
+        helpPtr = helpPtr->Next; 
+    }
+    cout << "_____________________________________________________________________"<<endl;
+    cout << "\nthis ID number is not found!";
+}
+
+//_______________________________________________//
+
+//Test all previously defined functions
+int main ()
+{
+    Node *head = NULL;  // create new list
+    cout << "\nHello dear, what is the service you want to do? (Just enter a number)\n"<< endl; 
+    int again;
+    
+    do // loop to again the program if the user want
+    {
+      cout << "(1)Insert employee\n(2)Show employees\n(3)Search employee" << endl;
+      cout << "(4)Update employee\n(5)Update salary\n(6)Delete employee" << endl;
+      
+      int option;
+      cin >> option;
+      
+      if (option == 1)
+      {
+          insertion (&head);
+      }
+      else if (option == 2)
+      {
+          ShowEmployees(head);
+      }
+      else if (option == 3)
+      {
+          SearchEmployee(head);
+      }
+       else if (option == 4)
+      {
+          UpdateEmployee(&head);
+      }
+      else if (option == 5)
+      {
+          UpdateSalary(&head);
+      }
+      else if (option == 6)
+      {
+          delEmployee(&head);
+      }
+      else // if the user enters a number other then the numbers 1 to 6
+      {
+          cout << "_____________________________________________________________________"<<endl;
+          cout << "\nSorry dear, the number you entered is not among the options available above.";
+      }
+      
+      do // loop to sure the user enters 1 or 2 only
+      {
+          cout << "\nDo you want another service? (Just enter a number)\n(1)Yea\n(2)No"<< endl;
+          cin >> again;
+          
+          if(again!=1 && again!=2)
+          cout << "\nplease enter number 1 or 2 only";
+          
+      } while( again!=1 && again!=2 );
+      
+      // if the user enters 1 the program will running again, if else the program will end
+      if (again == 1) 
+      {
+          cout << "_____________________________________________________________________"<<endl;
+          cout << "\nwhat is the service you want to do? (Just enter a number)"<< endl;
+      }
+      else
+      {
+          cout << "_____________________________________________________________________"<<endl;
+          cout << "\nThank you for using Employee record management system.\nStudent name: Mashael alharthi\nID number: 2006528";
+      }
+      
+    }while(again==1);
+  
+  return 0;
+}
+
